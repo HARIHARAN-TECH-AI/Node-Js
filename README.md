@@ -48,6 +48,10 @@ Step 10 : Finally I test the API using Postman and Thunder Client after i pushed
         this will help us to publish the API to connect to github. 
 
 
+        i provide the rendered api url "https://node-js-azba.onrender.com/"
+        in this url you need to add suffix like "/api/entries" , "/api/entries/:id", "/api/entries/search?title=Dream Chasers  like that...
+
+
 Here  i upload one Screenshot folder which contain all the details contain DB connection String, DB Stored in TiDB , Deployment like that 
 
 Thank You...!
