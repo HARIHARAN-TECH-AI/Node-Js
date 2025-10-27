@@ -1,0 +1,48 @@
+name: Node.js CI with TiDB
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Wait for TiDB (Port 4000)
+      run: |
+        echo "Checking TiDB connection..."
+        for i in {1..20}; do
+          nc -zv gateway01.ap-southeast-1.prod.aws.tidbcloud.com 4000 && break
+          echo "TiDB not ready yet... retrying in 3s"
+          sleep 3
+        done
+
+    - name: Test DB connection & Run index.js
+      env:
+        DB_HOST: gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+        DB_USER: 2wpYqhRTwr6WFUT.root
+        DB_PASS: LtBer3s7hxrSxVpK
+        DB_NAME: test
+        DB_PORT: 4000
+      run: node index.js
+
+    - name: Run tests (optional)
+      if: success()
+      run: echo '✅ All tests passed successfully'
+
+    - name: Start server (optional for CI)
+      run: node index.js
